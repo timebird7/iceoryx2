@@ -226,6 +226,11 @@ impl SharedMemoryBuilder {
         self.size = actual_shm_size as usize;
 
         let memory_mapping = Self::create_memory_mapping(fd, &self)?;
+        prototype_prefault(
+            memory_mapping.base_address() as *mut u8,
+            memory_mapping.size(),
+            matches!(self.access_mode, AccessMode::ReadWrite),
+        );
 
         let shm = SharedMemory {
             name: self.name,
@@ -246,6 +251,34 @@ impl SharedMemoryBuilder {
         SharedMemoryCreationBuilder { config: self }
     }
 }
+
+
+/// PROTOTYPE (#2163): pre-populate the page tables of a fresh mapping so the
+/// hot path does not take one page fault per 4 KiB page.
+/// Selected via env var IOX2_PREFAULT = "none" | "willneed" | "populate".
+#[cfg(all(target_os = "linux", feature = "std"))]
+fn prototype_prefault(base: *mut u8, size: usize, writable: bool) {
+    extern crate std;
+    let mode = std::env::var("IOX2_PREFAULT").unwrap_or_default();
+    let ret = match mode.as_str() {
+        "willneed" => unsafe {
+            posix::posix_madvise(base.cast(), size, posix::POSIX_MADV_WILLNEED)
+        },
+        "populate" => unsafe {
+            posix::madvise(
+                base.cast(),
+                size,
+                if writable { posix::MADV_POPULATE_WRITE } else { posix::MADV_POPULATE_READ },
+            )
+        },
+        _ => return,
+    };
+    if ret != 0 {
+        warn!("prefault ({mode}) of {size} bytes failed: {}", std::io::Error::last_os_error());
+    }
+}
+#[cfg(not(all(target_os = "linux", feature = "std")))]
+fn prototype_prefault(_: *mut u8, _: usize, _: bool) {}
 
 #[derive(Debug)]
 pub struct SharedMemoryCreationBuilder {
@@ -380,6 +413,14 @@ impl SharedMemoryCreationBuilder {
                 fail!(from self.config, when unsafe { MemoryLock::new(shm.memory_mapping.base_address().cast(), shm.memory_mapping.size()) },
                         "{} since the memory lock failed.", msg),
             )
+        }
+
+        if !self.config.zero_memory {
+            prototype_prefault(
+                shm.memory_mapping.base_address() as *mut u8,
+                shm.memory_mapping.size(),
+                true,
+            );
         }
 
         if self.config.zero_memory {

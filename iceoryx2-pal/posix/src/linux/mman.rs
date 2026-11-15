@@ -101,3 +101,11 @@ pub unsafe fn munmap(addr: *mut void, len: size_t) -> int {
 pub unsafe fn mprotect(addr: *mut void, len: size_t, prot: int) -> int {
     unsafe { libc::mprotect(addr, len, prot) }
 }
+
+pub unsafe fn madvise(addr: *mut void, len: size_t, advice: int) -> int {
+    unsafe { libc::madvise(addr, len, advice) }
+}
+
+pub unsafe fn posix_madvise(addr: *mut void, len: size_t, advice: int) -> int {
+    unsafe { libc::posix_madvise(addr, len, advice) }
+}

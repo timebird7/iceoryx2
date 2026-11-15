@@ -363,3 +363,6 @@ pub const _PC_REC_MIN_XFER_SIZE: int = libc::_PC_REC_MIN_XFER_SIZE as _;
 pub const _PC_REC_XFER_ALIGN: int = libc::_PC_REC_XFER_ALIGN as _;
 pub const _PC_ALLOC_SIZE_MIN: int = libc::_PC_ALLOC_SIZE_MIN as _;
 pub const _PC_SYMLINK_MAX: int = libc::_PC_SYMLINK_MAX as _;
+pub const MADV_POPULATE_READ: int = 22;
+pub const MADV_POPULATE_WRITE: int = 23;
+pub const POSIX_MADV_WILLNEED: int = libc::POSIX_MADV_WILLNEED as _;

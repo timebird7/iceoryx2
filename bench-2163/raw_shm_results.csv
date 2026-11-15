@@ -1,0 +1,49 @@
+side,size_mb,strategy,prep_us,touch_us,touch_minflt,warm_us,err
+sender,1,none,15,740,257,120,0
+receiver,1,none,15,111,16,30,0
+sender,1,posix_madvise(WILLNEED),15,678,257,102,0
+receiver,1,posix_madvise(WILLNEED),10,94,16,15,0
+sender,1,madvise(POPULATE_*),393,198,1,60,0
+receiver,1,madvise(POPULATE_*),109,123,0,23,0
+sender,1,mmap(MAP_POPULATE),368,239,1,51,0
+receiver,1,mmap(MAP_POPULATE),100,67,0,21,0
+sender,1,mlock,413,268,1,54,0
+receiver,1,mlock,80,61,0,17,0
+sender,1,manual touch (1B/page),425,170,1,50,0
+receiver,1,manual touch (1B/page),45,77,0,19,0
+sender,4,none,13,3129,1025,655,0
+receiver,4,none,16,385,64,248,0
+sender,4,posix_madvise(WILLNEED),12,2608,1025,552,0
+receiver,4,posix_madvise(WILLNEED),10,342,64,166,0
+sender,4,madvise(POPULATE_*),1131,716,1,269,0
+receiver,4,madvise(POPULATE_*),231,214,0,164,0
+sender,4,mmap(MAP_POPULATE),1296,1008,1,266,0
+receiver,4,mmap(MAP_POPULATE),210,162,0,160,0
+sender,4,mlock,1392,1023,1,262,0
+receiver,4,mlock,321,270,0,230,0
+sender,4,manual touch (1B/page),2071,1050,1,443,0
+receiver,4,manual touch (1B/page),166,277,0,226,0
+sender,16,none,15,11142,4097,2624,0
+receiver,16,none,10,1177,256,622,0
+sender,16,posix_madvise(WILLNEED),14,9233,4097,1685,0
+receiver,16,posix_madvise(WILLNEED),17,1037,256,623,0
+sender,16,madvise(POPULATE_*),4440,3011,1,1151,0
+receiver,16,madvise(POPULATE_*),773,602,0,584,0
+sender,16,mmap(MAP_POPULATE),5094,4417,1,1178,0
+receiver,16,mmap(MAP_POPULATE),799,617,0,601,0
+sender,16,mlock,5192,4386,1,1180,0
+receiver,16,mlock,956,616,0,600,0
+sender,16,manual touch (1B/page),6373,3474,1,1288,0
+receiver,16,manual touch (1B/page),518,700,0,633,0
+sender,64,none,15,41396,16385,9611,0
+receiver,64,none,21,7770,1025,5558,0
+sender,64,posix_madvise(WILLNEED),29,48320,16385,13216,0
+receiver,64,posix_madvise(WILLNEED),93,8038,1025,5615,0
+sender,64,madvise(POPULATE_*),21991,21989,1,13134,0
+receiver,64,madvise(POPULATE_*),2975,3903,0,4100,0
+sender,64,mmap(MAP_POPULATE),21157,23371,1,9560,0
+receiver,64,mmap(MAP_POPULATE),2970,3575,0,3643,0
+sender,64,mlock,23541,23970,1,9977,0
+receiver,64,mlock,3695,4106,0,5423,0
+sender,64,manual touch (1B/page),28638,22105,1,13058,0
+receiver,64,manual touch (1B/page),2481,5753,0,5526,0
